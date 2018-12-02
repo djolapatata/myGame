@@ -11,11 +11,16 @@ public class playerMovement : MonoBehaviour {
     private KeyCode jump;
 
     private Rigidbody rb;
+    private int movementMode;
 
     private float runSpeed;
     private float airSpeed;
     private float jumpHeight;
     private float maxSpeed;
+    private float maxHopSpeed;
+    private float stoppingFactor;
+    
+
     private float straightLineSpeed;
     private bool grounded = true;
     private bool canJump = true;
@@ -34,11 +39,15 @@ public class playerMovement : MonoBehaviour {
         right = KeyCode.D;
         jump = KeyCode.Space;
 
-        runSpeed = 10.0f;
+        stoppingFactor = 1.1f;
+        runSpeed = 15.0f;
         airSpeed = 2f;
         jumpHeight = 5f;
 
         maxSpeed = 10f;
+        maxHopSpeed = 15f;
+
+        movementMode = 1;
     }
 
     private void FixedUpdate()
@@ -47,44 +56,67 @@ public class playerMovement : MonoBehaviour {
         straightLineSpeed = Mathf.Sqrt(Mathf.Pow(rb.velocity.x, 2) + Mathf.Pow(rb.velocity.z, 2));
         grounded = isGrounded();
         canJump = ableToJump();
-        Debug.Log(isGrounded());
 
-        if (Input.GetKey(forward) && straightLineSpeed <= maxSpeed && grounded)
+        if (movementMode == 1)
         {
-            rb.AddForce(transform.forward * runSpeed);
+            if (grounded)
+            {
+                if (straightLineSpeed <= maxSpeed)
+                {
+                    if (Input.GetKey(forward) && straightLineSpeed <= maxSpeed)
+                    {
+                        rb.AddForce(transform.forward * runSpeed);
+                    }
+                    if (Input.GetKey(backward) && straightLineSpeed <= maxSpeed)
+                    {
+                        rb.AddForce(-transform.forward * runSpeed);
+                    }
+                    if (Input.GetKey(left) && straightLineSpeed <= maxSpeed)
+                    {
+                        rb.AddForce(-transform.right * runSpeed);
+                    }
+                    if (Input.GetKey(right) && straightLineSpeed <= maxSpeed)
+                    {
+                        rb.AddForce(transform.right * runSpeed);
+                    }
+                    if (!Input.GetKey(forward) && !Input.GetKey(backward) && !Input.GetKey(left) && !Input.GetKey(right))
+                    {
+                        rb.velocity = new Vector3 (rb.velocity.x/stoppingFactor , rb.velocity.y, rb.velocity.z/stoppingFactor);
+                    }
+                }
+
+            }
+            else
+            {
+                if (Input.GetKey(forward) && straightLineSpeed <= maxHopSpeed)
+                {
+                    rb.AddForce(transform.forward * airSpeed);
+                }
+
+                if (Input.GetKey(backward) && straightLineSpeed <= maxHopSpeed)
+                {
+                    rb.AddForce(-transform.forward * airSpeed);
+                }
+
+                if (Input.GetKey(left))
+                {
+                    rb.AddForce(-transform.right * airSpeed);
+                }
+
+                if (Input.GetKey(right))
+                {
+                    rb.AddForce(transform.right * airSpeed);
+                }
+            }
+
+            if (Input.GetKey(jump) && canJump)
+            {
+                rb.velocity = new Vector3(rb.velocity.x, jumpHeight, rb.velocity.z);
+            }
         }
-        if (Input.GetKey(forward) && !grounded)
-        {
-            rb.AddForce(transform.forward * airSpeed);
-        }
-        if (Input.GetKey(backward) && straightLineSpeed <= maxSpeed && grounded)
-        {
-            rb.AddForce(-transform.forward * runSpeed);
-        }
-        if (Input.GetKey(backward) && !grounded)
-        {
-            rb.AddForce(-transform.forward * airSpeed);
-        }
-        if (Input.GetKey(left) && straightLineSpeed <= maxSpeed && grounded)
-        {
-            rb.AddForce(-transform.right * runSpeed);
-        }
-        if (Input.GetKey(left) && !grounded)
-        {
-            rb.AddForce(-transform.right * airSpeed);
-        }
-        if (Input.GetKey(right) && straightLineSpeed <= maxSpeed && grounded)
-        {
-            rb.AddForce(transform.right * runSpeed);
-        }
-        if (Input.GetKey(right) && !grounded)
-        {
-            rb.AddForce(transform.right * airSpeed);
-        }
-        if (Input.GetKey(jump) && canJump)
-        {
-            rb.velocity = new Vector3(rb.velocity.x, jumpHeight, rb.velocity.z);
-        }
+
+
+
     }
 
     // Update is called once per frame
@@ -92,7 +124,6 @@ public class playerMovement : MonoBehaviour {
     {
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, playerCam.GetComponent<cameraMovement>().getCameraHorAxis(), transform.eulerAngles.z);
         Debug.Log(straightLineSpeed);
-        // Debug.Log(rb.OnCollisionEnter)
     }
 
     bool isGrounded()
