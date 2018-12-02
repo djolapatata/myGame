@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class cameraMovement : MonoBehaviour {
+public class cameraMovement : MonoBehaviour
+{
 
     private float yaw;
     private float pitchCheck;
@@ -15,13 +16,14 @@ public class cameraMovement : MonoBehaviour {
 
     private Camera playerCam;
 
-    public Vector3 getCameraHorAxis()
+    public float getCameraHorAxis()
     {
-        return playerCam.transform.eulerAngles;
+        return yaw;
     }
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
 
         playerCam = GetComponent<Camera>();
         Cursor.visible = true;

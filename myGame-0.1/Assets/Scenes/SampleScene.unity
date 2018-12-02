@@ -125,8 +125,8 @@ GameObject:
   - component: {fileID: 74264371}
   - component: {fileID: 74264374}
   m_Layer: 0
-  m_Name: Camera
-  m_TagString: Untagged
+  m_Name: playerCam
+  m_TagString: playerCam
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -294,7 +294,7 @@ Transform:
   m_GameObject: {fileID: 1139864461}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 22.426, y: 0.22426, z: 22.426}
+  m_LocalScale: {x: 523.8948, y: -1.1963136, z: 523.8948}
   m_Children: []
   m_Father: {fileID: 1164348564}
   m_RootOrder: 0
@@ -326,7 +326,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 76fe9e6f29e7a354089b1a917572be65, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
